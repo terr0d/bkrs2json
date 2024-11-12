@@ -58,7 +58,9 @@ def process_entry(entry_lines, alt_format):
 
     # Normalize spaces and parse only Russian-language meanings
     cleaned_meanings = [
-        re.sub(r'\s+', ' ', meaning).strip()
+        re.sub(r'\s+', ' ',
+               meaning.replace('\\[', '[').replace('\\]', ']').replace('\"', '"')
+               ).strip()
         for meaning in meanings if is_mainly_russian(meaning)
     ]
 
