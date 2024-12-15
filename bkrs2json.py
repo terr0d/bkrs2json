@@ -46,7 +46,9 @@ def parse_dsl_file(dsl_file_path, alt_format):
 
 def process_entry(entry_lines, alt_format):
     """Process and clean an entry split into lines."""
-    headword, pinyin = entry_lines[0].strip(), entry_lines[1].strip()
+    headword = entry_lines[0].strip()
+    # Clean tags from pinyin
+    pinyin = TAGS_REGEX.sub('', entry_lines[1].strip())
 
     # Remove examples and unnecessary tags from content
     content = ' '.join(entry_lines[2:])
@@ -56,7 +58,7 @@ def process_entry(entry_lines, alt_format):
     # Extract meanings from the content
     meanings = [m.strip() for m in MEANINGS_REGEX.findall(content) if m.strip()]
 
-    # Normalize spaces and parse only Russian-language meanings
+    # Normalize spaces and character escaping, parse only Russian-language meanings
     cleaned_meanings = [
         re.sub(r'\s+', ' ',
                meaning.replace('\\[', '[').replace('\\]', ']').replace('\"', '"')
